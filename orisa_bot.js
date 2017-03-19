@@ -37,10 +37,13 @@ controller.hears(['stop harassing me'], 'ambient', function(bot, message){
             }, function(err, usrd){
               dm.say('*User:* '+usrd.user.real_name);
 
-              dm.addMessage({
-                  text: 'Please list them below:',
-                  action: 'description_thread'
-              },'yes_thread');
+              // Create a yes/no question in the default thread...
+
+              dm.addQuestion('*Please list the witnesses below: *', function(res, dm){
+                    dm.gotoThread('description_thread');}, 'witnesses', 'yes_thread');
+
+              dm.addQuestion('*Please provide a short description of the incident below: *', function(res, dm){
+                    dm.gotoThread('links_thread');}, 'description', 'description_thread');
 
               dm.addMessage({
                   text: 'That is fine.',
@@ -54,37 +57,30 @@ controller.hears(['stop harassing me'], 'ambient', function(bot, message){
               },'bad_response');
 
               dm.addMessage({
-                  text: 'Thank you. Here are some links regarding workplace harassment: https://www.worksafebc.com/en/health-safety/hazards-exposures/bullying-harassment'
+                  text: '*Some resources:* https://www.worksafebc.com/en/health-safety/hazards-exposures/bullying-harassment'
+              },'links_thread');
 
-              }, 'links_thread')
-
-              dm.addMessage({
-                  text: 'Please provide a short description of the incident: ',
-                  action: 'links_thread'
-              }, 'description_thread');
-
-
-              // Create a yes/no question in the default thread...
               dm.ask('Were there any possible witnesses? (yes/no)', [
                   {
                       pattern: 'yes',
-                      callback: function(response, dm) {
+                      callback: function(res, dm) {
                           dm.gotoThread('yes_thread');
                       },
                   },
                   {
                       pattern: 'no',
-                      callback: function(response, dm) {
+                      callback: function(res, dm) {
                           dm.gotoThread('no_thread');
                       },
                   },
                   {
                       default: true,
-                      callback: function(response, dm) {
+                      callback: function(res, dm) {
                           dm.gotoThread('bad_response');
                       },
                   }
               ]);
+
           });
           dm.say('*Message:* '+res.messages[1].text);
           //dm.say('*User:* '+res.messages[1].user);
