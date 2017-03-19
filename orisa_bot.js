@@ -21,9 +21,11 @@ var time = '';
 
 controller.hears(['stop harassing me'], 'ambient', function(bot, message){
   var channelID = message.channel;
+  
   bot.startPrivateConversation(message, function(err, dm) {
+    
     dm.say('*_Message recorded:_ *');
-    bot.api.channels.history({
+    bot.api.mpim.history({
         timestamp: "latest",
         channel: channelID,
         inclusive: true,
