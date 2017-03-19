@@ -18,7 +18,7 @@ var bot = controller.spawn({
 
 controller.hears(['stop harassing me'], 'ambient', function(bot, message){
   bot.startPrivateConversation(message, function(err, dm) {
-    dm.say('What is wrong?');
+    dm.say('*_Message recorded:_ *');
     bot.api.channels.history({
         timestamp: "latest",
         channel: "C4LVCQE31",
@@ -30,15 +30,11 @@ controller.hears(['stop harassing me'], 'ambient', function(bot, message){
         if (err){
           bot.botkit.log('Failed to post message', err);
         }
-    });
-
-    bot.api.reactions.add({
-        timestamp: message.ts,
-        channel: message.channel,
-        name: 'robot_face',
-    }, function(err, res) {
-        if (err) {
-            bot.botkit.log('Failed to add emoji reaction :(', err);
+        else {
+          console.log("Got text:", res.messages[1].text);
+          dm.say('*Message:* '+res.messages[1].text);
+          dm.say('*User:* '+res.messages[1].user);
+          dm.say('*Timestamp:* '+res.messages[1].ts);
         }
     });
 
