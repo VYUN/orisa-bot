@@ -95,8 +95,15 @@ controller.hears(['stop harassing me'], 'ambient', function(bot, message){
                 if(dm.status =='completed') {
                     var witnessesValue = dm.extractResponse('witnesses');
                     var descriptionValue = dm.extractResponse('description');
-                    bot.reply(message, "*_Here is your report:_* \n *Offender:* " + name + "\n *Message:* " + evidence + "\n *Time:* " + 
-                      time + "\n *Witnesses:* " + witnessesValue + "\n *Description:* " + descriptionValue);
+                    var summary = "*_Harassment report:_* \n *Offender:* " + name + "\n *Message:* " + evidence + "\n *Time:* " + 
+                      time + "\n *Witnesses:* " + witnessesValue + "\n *Description:* " + descriptionValue
+                    bot.reply(message, summary);
+                    message.user = "U4L70084B"; // hardcoded user
+                    bot.startPrivateConversation(message, function(err, dm) {
+                      dm.say(summary);
+                    });
+
+
                 } else{
                     bot.reply(message, 'Nice');
                 }
